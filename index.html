@@ -34,7 +34,7 @@
 
       <section class="dashboard-grid">
         <article class="panel chart-panel">
-          <div class="panel-heading"><div><p class="eyebrow">ANÁLISIS</p><h2>¿En qué gastas?</h2></div><span id="period-label">Este mes</span></div>
+          <div class="panel-heading"><div><p class="eyebrow">ANÁLISIS</p><h2>¿En qué gastas?</h2></div><div class="analysis-actions"><button id="manage-categories-button" class="secondary manage-categories-button" type="button">Gestionar categorías</button></div></div>
           <div id="category-chart" class="category-chart" aria-label="Gráfico de gastos por categoría"></div>
           <p id="chart-empty" class="empty-message">Añade movimientos para ver el reparto de gastos.</p>
         </article>
@@ -101,6 +101,22 @@
         <label class="checkbox-label"><input id="apply-similar" type="checkbox" checked /> Aplicar también a <strong id="similar-count">0</strong> movimientos similares</label>
         <p class="hint">La app usa palabras comunes de la descripción para encontrar movimientos parecidos.</p>
         <div class="dialog-actions"><button class="secondary" type="button" data-close-category>Cancelar</button><button class="primary" type="submit">Guardar categoría</button></div>
+      </form>
+    </dialog>
+    <dialog id="category-manager-dialog" aria-labelledby="category-manager-dialog-title">
+      <div class="dialog-content">
+        <div class="dialog-heading"><h2 id="category-manager-dialog-title">Gestionar categorías</h2><button class="close" type="button" data-close-category-manager aria-label="Cerrar">×</button></div>
+        <p class="hint">Al eliminar una categoría, sus movimientos se conservarán como «Sin clasificar».</p>
+        <ul id="category-list" class="category-list" aria-label="Categorías disponibles"></ul>
+        <div class="dialog-actions"><button class="secondary" type="button" data-close-category-manager>Cerrar</button></div>
+      </div>
+    </dialog>
+    <dialog id="category-delete-dialog" aria-labelledby="category-delete-dialog-title">
+      <form id="category-delete-form" method="dialog">
+        <div class="dialog-heading"><h2 id="category-delete-dialog-title">¿Eliminar categoría?</h2><button class="close" type="button" data-close-category-delete aria-label="Cerrar">×</button></div>
+        <p>Vas a eliminar <strong id="category-delete-name"></strong>.</p>
+        <p id="category-delete-impact" class="hint"></p>
+        <div class="dialog-actions"><button class="secondary" type="button" data-close-category-delete>Cancelar</button><button class="danger" type="submit">Eliminar categoría</button></div>
       </form>
     </dialog>
     <dialog id="import-dialog" aria-labelledby="import-dialog-title">
