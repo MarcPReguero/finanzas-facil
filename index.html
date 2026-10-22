@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Finanzas Fácil: seguimiento sencillo de gastos personales." />
+    <title>Finanzas Fácil</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <header class="topbar">
+      <div class="brand"><span aria-hidden="true">◒</span> Finanzas Fácil</div>
+      <button id="theme-toggle" class="icon-button" type="button" aria-label="Activar modo oscuro">◐</button>
+    </header>
+
+    <main id="main" class="container">
+      <section class="hero" aria-labelledby="welcome-title">
+        <div>
+          <p class="eyebrow">TU DINERO, MÁS CLARO</p>
+          <h1 id="welcome-title">Controla tus gastos sin complicarte.</h1>
+          <p>Registra tus movimientos, identifica hábitos y descubre una forma sencilla de ahorrar.</p>
+        </div>
+        <button class="primary" type="button" data-open-dialog="transaction-dialog">+ Añadir movimiento</button>
+      </section>
+
+      <section class="summary-grid" aria-label="Resumen del mes">
+        <article class="summary-card income"><p>Ingresos este mes</p><strong id="income-value">0,00 €</strong></article>
+        <article class="summary-card expense"><p>Gastos este mes</p><strong id="expense-value">0,00 €</strong></article>
+        <article class="summary-card balance"><p>Balance del mes</p><strong id="balance-value">0,00 €</strong></article>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="panel chart-panel">
+          <div class="panel-heading"><div><p class="eyebrow">ANÁLISIS</p><h2>¿En qué gastas?</h2></div><span id="period-label">Este mes</span></div>
+          <div id="category-chart" class="category-chart" aria-label="Gráfico de gastos por categoría"></div>
+          <p id="chart-empty" class="empty-message">Añade movimientos para ver el reparto de gastos.</p>
+        </article>
+        <article class="panel insights-panel">
+          <div class="panel-heading"><div><p class="eyebrow">CONSEJOS</p><h2>Una idea para ti</h2></div><span aria-hidden="true">✦</span></div>
+          <div id="insights" class="insights"><p>Cuando registres tus gastos, aquí aparecerán observaciones útiles.</p></div>
+        </article>
+      </section>
+
+      <section class="panel evolution-panel" aria-labelledby="evolution-title">
+        <div class="panel-heading evolution-heading"><div><p class="eyebrow">EVOLUCIÓN</p><h2 id="evolution-title">Ingresos y gastos a lo largo del tiempo</h2></div><div class="chart-controls"><label>Vista<select id="chart-type" aria-label="Tipo de gráfico"><option value="bars">Barras</option><option value="line">Línea</option></select></label><label>Periodo<select id="chart-period" aria-label="Periodo del gráfico"><option value="1">1 mes · días</option><option value="3">3 meses · días</option><option value="6" selected>6 meses · semanas</option><option value="12">12 meses · semanas</option><option value="all">Historial · meses</option></select></label></div></div>
+        <div class="chart-legend" aria-hidden="true"><span><i class="income-dot"></i>Ingresos</span><span><i class="expense-dot"></i>Gastos</span></div>
+        <div id="evolution-chart" class="evolution-chart" aria-label="Gráfico de evolución mensual de ingresos y gastos"></div>
+        <p id="evolution-empty" class="empty-message">Añade movimientos en distintos meses para descubrir su evolución.</p>
+      </section>
+
+      <section class="panel transactions-panel" aria-labelledby="transactions-title">
+        <div class="panel-heading controls-heading">
+          <div><p class="eyebrow">MOVIMIENTOS</p><h2 id="transactions-title">Tus últimos movimientos</h2></div>
+          <div class="actions">
+            <label class="secondary file-label">Importar CSV<input id="csv-input" type="file" accept=".csv,text/csv" /></label>
+            <button id="export-button" class="secondary" type="button">Exportar</button>
+            <button id="clear-all-button" class="secondary danger-outline" type="button">Eliminar todo</button>
+          </div>
+        </div>
+        <p class="hint">Formato CSV: fecha, descripción, importe. Ejemplo: 2026-10-01,Supermercado,-42.30</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th class="amount">Importe</th><th><span class="sr-only">Acciones</span></th></tr></thead>
+            <tbody id="transactions-body"></tbody>
+          </table>
+        </div>
+        <button id="load-more-button" class="secondary load-more" type="button">Cargar más movimientos</button>
+        <p id="transactions-empty" class="empty-message">Aún no hay movimientos. Empieza añadiendo uno.</p>
+      </section>
+    </main>
+
+    <dialog id="transaction-dialog" aria-labelledby="dialog-title">
+      <form id="transaction-form" method="dialog">
+        <div class="dialog-heading"><h2 id="dialog-title">Añadir movimiento</h2><button class="close" type="button" data-close-dialog aria-label="Cerrar">×</button></div>
+        <label>Tipo<select id="type" name="type"><option value="expense">Gasto</option><option value="income">Ingreso</option></select></label>
+        <label>Descripción<input id="description" name="description" required maxlength="80" placeholder="Ej. Compra supermercado" /></label>
+        <label>Categoría<select id="category" name="category"></select></label>
+        <p id="category-suggestion" class="ai-suggestion" aria-live="polite">Escribe una descripción para recibir una sugerencia inteligente.</p>
+        <label id="custom-category-field" hidden>Nueva categoría<input id="custom-category" name="custom-category" maxlength="30" placeholder="Ej. Mascotas" /></label>
+        <label>Importe (€)<input id="amount" name="amount" required min="0.01" step="0.01" type="number" inputmode="decimal" placeholder="0,00" /></label>
+        <label>Fecha<input id="date" name="date" required type="date" /></label>
+        <div class="dialog-actions"><button class="secondary" type="button" data-close-dialog>Cancelar</button><button class="primary" type="submit">Guardar movimiento</button></div>
+      </form>
+    </dialog>
+    <dialog id="delete-dialog" aria-labelledby="delete-dialog-title">
+      <form id="delete-form" method="dialog">
+        <div class="dialog-heading"><h2 id="delete-dialog-title">¿Eliminar movimiento?</h2><button class="close" type="button" data-close-delete aria-label="Cerrar">×</button></div>
+        <p>Vas a eliminar <strong id="delete-description"></strong>. Esta acción no se puede deshacer.</p>
+        <div class="dialog-actions"><button class="secondary" type="button" data-close-delete>Cancelar</button><button id="confirm-delete" class="danger" type="submit">Eliminar</button></div>
+      </form>
+    </dialog>
+    <dialog id="category-dialog" aria-labelledby="category-dialog-title">
+      <form id="category-edit-form" method="dialog">
+        <div class="dialog-heading"><h2 id="category-dialog-title">Cambiar categoría</h2><button class="close" type="button" data-close-category aria-label="Cerrar">×</button></div>
+        <p>Movimiento: <strong id="category-edit-description"></strong></p>
+        <label>Nueva categoría<select id="category-edit-select"></select></label>
+        <label id="category-edit-custom-field" hidden>Nombre de la nueva categoría<input id="category-edit-custom" maxlength="30" placeholder="Ej. Regalos" /></label>
+        <label class="checkbox-label"><input id="apply-similar" type="checkbox" checked /> Aplicar también a <strong id="similar-count">0</strong> movimientos similares</label>
+        <p class="hint">La app usa palabras comunes de la descripción para encontrar movimientos parecidos.</p>
+        <div class="dialog-actions"><button class="secondary" type="button" data-close-category>Cancelar</button><button class="primary" type="submit">Guardar categoría</button></div>
+      </form>
+    </dialog>
+    <dialog id="import-dialog" aria-labelledby="import-dialog-title">
+      <form id="import-form" method="dialog">
+        <div class="dialog-heading"><h2 id="import-dialog-title">Normalizar archivo CSV</h2><button class="close" type="button" data-close-import aria-label="Cerrar">×</button></div>
+        <p class="hint">Hemos detectado las columnas. Revísalas antes de importar: cada banco puede usar nombres y formatos distintos.</p>
+        <label class="checkbox-label"><input id="has-headers" type="checkbox" checked /> La primera fila contiene encabezados</label>
+        <div class="mapping-grid">
+          <label>Fecha<select id="map-date" required></select></label>
+          <label>Descripción<select id="map-description" required></select></label>
+          <label>Importe firmado<select id="map-amount"></select></label>
+          <label>Cargos / gastos<select id="map-debit"></select></label>
+          <label>Abonos / ingresos<select id="map-credit"></select></label>
+          <label>Categoría del banco<select id="map-bank-category"></select></label>
+        </div>
+        <p class="hint">Usa <em>Importe firmado</em> si una sola columna trae valores positivos y negativos. Si el banco separa cargos y abonos, selecciona ambas columnas y deja Importe firmado sin elegir. Si el archivo trae una categoría bancaria, selecciónala para priorizarla.</p>
+        <div class="preview-wrap"><table><thead id="import-preview-head"></thead><tbody id="import-preview-body"></tbody></table></div>
+        <p id="import-status" class="hint"></p>
+        <div class="dialog-actions"><button class="secondary" type="button" data-close-import>Cancelar</button><button class="primary" type="submit">Importar movimientos</button></div>
+      </form>
+    </dialog>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
