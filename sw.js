@@ -1,4 +1,4 @@
-const CACHE_NAME = "finanzas-facil-v2";
+const CACHE_NAME = "finanzas-facil-v3";
 
 const urlsToCache = [
   "./",
@@ -14,6 +14,7 @@ self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(urlsToCache))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -28,6 +29,7 @@ self.addEventListener("activate", event => {
         })
       );
     })
+    .then(() => self.clients.claim())
   );
 });
 
